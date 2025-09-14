@@ -1,0 +1,18 @@
+{
+  "name": "dexa-be",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for hr-service (4001) and attendance-service (4002)",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix services/hr-services\" \"npm run dev --prefix services/attendance-service\"",
+    "dev:hr": "npm run dev --prefix services/hr-services",
+    "dev:attendance": "npm run dev --prefix services/attendance-service",
+    "start": "concurrently \"npm start --prefix services/hr-services\" \"npm start --prefix services/attendance-service\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
