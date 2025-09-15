@@ -1,1 +1,24 @@
-node_modules
+# Node modules
+node_modules/
+**/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env files (root & services)
+.env
+**/.env
+
+# Build outputs
+dist/
+build/
+coverage/
+.tmp/
+
+# Mac / system
+.DS_Store
+Thumbs.db
