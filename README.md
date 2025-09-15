@@ -69,6 +69,6 @@ Dari root project (`dexa-be/`), jalankan:
 * **attendance-service** digunakan untuk absensi clock-in/clock-out.
 * Frontend repo yang terhubung:
 
-  * [DexaPeople](link-repo-dexa-people)
-  * [DexaWFH](link-repo-dexa-wfh)
+  * [DexaPeople](https://github.com/VigoMade/dexa-people.git)
+  * [DexaWFH](https://github.com/VigoMade/dexa-wfh.git)
 
