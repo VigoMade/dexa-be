@@ -10,11 +10,22 @@ export default function auth(req, res, next) {
       algorithms: [process.env.JWT_ALG || "HS256"],
       issuer: process.env.JWT_ISS,
       audience: process.env.JWT_AUD,
-      clockTolerance: 5
+      clockTolerance: 5,
     });
     req.user = payload; 
     next();
   } catch (e) {
     res.status(401).json({ message: "Invalid/expired token" });
   }
+}
+
+
+export function requireRole(...roles) {
+  return (req, res, next) => {
+    const role = req.user?.role;
+    if (!role || !roles.includes(role)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    next();
+  };
 }

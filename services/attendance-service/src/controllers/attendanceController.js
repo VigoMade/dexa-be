@@ -17,19 +17,22 @@ function extractBase64(dataUrl) {
 
 export const getAllAttendance = async (req, res) => {
   try {
+    const where = {};
+    const q = req.query.q;
+
+    if (q) {
+      where.nama_karyawan = { [Op.like]: `%${q}%` };
+    }
+
     const records = await Attendance.findAll({
+      where,
       order: [["created_at", "DESC"]],
     });
 
-   
     const mapped = records.map(r => {
       const data = r.toJSON();
-      if (data.foto_clockin) {
-        data.foto_clockin = data.foto_clockin.toString("base64");
-      }
-      if (data.foto_clockout) {
-        data.foto_clockout = data.foto_clockout.toString("base64");
-      }
+      if (data.foto_clockin) data.foto_clockin = data.foto_clockin.toString("base64");
+      if (data.foto_clockout) data.foto_clockout = data.foto_clockout.toString("base64");
       return data;
     });
 
@@ -38,6 +41,7 @@ export const getAllAttendance = async (req, res) => {
     res.status(500).json({ message: "Error fetching data", error: err.message });
   }
 };
+
 
 function parseMonthToRange(monthParam) {
   if (!monthParam) return null;
@@ -263,4 +267,44 @@ export const clockOut = async (req, res) => {
     return res.status(500).json({ message: "Clock out failed", error: err.message });
   }
 };
+
+
+export const showAttendanceById = async (req, res) => {
+  try {
+    const { id } = req.params;                 
+    const row = await Attendance.findByPk(id); 
+    if (!row) return res.status(404).json({ message: "Attendance not found" });
+
+    const d = row.toJSON();
+  
+    if (d.foto_clockin?.buffer) d.foto_clockin = Buffer.from(d.foto_clockin).toString("base64");
+    if (d.foto_clockout?.buffer) d.foto_clockout = Buffer.from(d.foto_clockout).toString("base64");
+    return res.json(d);
+  } catch (err) {
+    return res.status(500).json({ message: "Error fetching detail", error: err.message });
+  }
+};
+
+
+export const showAttendanceByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const rows = await Attendance.findAll({
+      where: { nama_karyawan: name },
+      order: [["created_at", "DESC"]],
+    });
+
+    const mapped = rows.map(r => {
+      const d = r.toJSON();
+      if (d.foto_clockin?.buffer) d.foto_clockin = Buffer.from(d.foto_clockin).toString("base64");
+      if (d.foto_clockout?.buffer) d.foto_clockout = Buffer.from(d.foto_clockout).toString("base64");
+      return d;
+    });
+
+    res.json(mapped);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching data", error: err.message });
+  }
+};
+
 
